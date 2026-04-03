@@ -1,14 +1,29 @@
-# Cachkit
+# CACHKIT
 
-Simple, fast, and powerful caching for Node.js. No config. Just works.
-
+[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![npm](https://img.shields.io/npm/v/cachkit.svg)](https://www.npmjs.com/package/cachkit)
 [![npm downloads](https://img.shields.io/npm/dm/cachkit.svg)](https://www.npmjs.com/package/cachkit)
+[![npm trends](https://img.shields.io/badge/npm_trends-Compare-blue.svg)](https://npmtrends.com/cachkit)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![Tests](https://img.shields.io/badge/Tests-157%2F157%20passing-brightgreen.svg)](https://github.com/Corex24/cachkit)
 [![Security](https://img.shields.io/badge/Security-AES--256--GCM-green.svg)](./SECURITY.md)
 [![Performance](https://img.shields.io/badge/Performance-0.1ms--hit-success.svg)](./PERFORMANCE.md)
-[![License MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+Simple, fast, and powerful caching for Node.js. No config. Just works.
+
+> ⭐ If you find Cachkit valuable, please drop a star on [GitHub](https://github.com/Corex24/cachkit)! It helps others discover the project.
+
+## Installation
+
+```bash
+npm install cachkit
+```
+
+or with yarn:
+
+```bash
+yarn add cachkit
+```
 
 **Cachkit** is a professional-grade caching library that eliminates redundant work. Need to cache database queries? Done. Want to memoize expensive computations? Easy. Deploying across multiple instances and need Redis? We handle that out of the box.
 
@@ -45,11 +60,7 @@ One line. No boilerplate. Production-ready.
 - **Graceful Error Handling** — Never crashes your application, fails safely
 - **Comprehensive Testing** — 157 tests covering security, stress, and real-world scenarios
 
-## Installation
 
-```bash
-npm install cachkit
-```
 
 ## Usage
 
@@ -110,45 +121,96 @@ if (!session) {
 
 ## Choosing Your Backend
 
-### In-Memory (Default)
+<details open>
+<summary>In-Memory (Default) - Best for Development</summary>
 
 ```typescript
 const cache = new Cache(); // Uses memory by default
 ```
 
-**Advantages:** Development environments, single-server deployments, rapid prototyping  
-**Trade-offs:** Data is lost on restart, doesn't scale across multiple instances
+**Advantages:**
+- Development environments
+- Single-server deployments
+- Rapid prototyping
+- Zero configuration
 
-### Redis (Distributed)
+**Trade-offs:**
+- Data is lost on restart
+- Doesn't scale across multiple instances
+
+</details>
+
+<details>
+<summary>Redis - Best for Production</summary>
+
+Multi-instance deployments, persistent caching, and production environments.
 
 ```typescript
+import { Cache } from "cachkit";
 import { RedisProvider } from "cachkit";
 
-const redis = new RedisProvider();
-await redis.connect();
-
-const cache = new Cache(redis);
+const provider = new RedisProvider();
+const cache = new Cache(provider);
 ```
 
-**Advantages:** Multi-instance deployments, persistent storage, production-ready  
-**Trade-offs:** Requires Redis server to be running
+Set environment variables:
+```bash
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+```
 
-### Memcached (Distributed)
+</details>
+
+<details>
+<summary>Memcached - Alternative Distributed Cache</summary>
+
+High-performance distributed memory caching.
 
 ```typescript
+import { Cache } from "cachkit";
 import { MemcachedProvider } from "cachkit";
 
-const memcached = new MemcachedProvider({
-  hosts: ["localhost:11211"],
-  keyPrefix: "app:"
-});
-await memcached.connect();
-
-const cache = new Cache(memcached);
+const provider = new MemcachedProvider();
+const cache = new Cache(provider);
 ```
 
-**Advantages:** High-performance distributed caching  
-**Trade-offs:** Requires Memcached server, data is not persistent
+</details>
+
+## Using the CLI
+
+Cachkit includes a command-line tool for cache management:
+
+<details>
+<summary>CLI Commands</summary>
+
+```bash
+# Show cache status
+cachkit status
+
+# List all cached keys
+cachkit keys
+
+# Get a cached value
+cachkit get user:1
+
+# Store a value (with 1 hour TTL)
+cachkit set user:1 '{"id":1,"name":"John"}' 3600
+
+# Delete a cached key
+cachkit delete user:1
+
+# View cache statistics
+cachkit stats
+
+# Clear all cache
+cachkit clear
+
+# Show help
+cachkit help
+```
+
+</details>
 
 ## API
 
@@ -208,6 +270,9 @@ Real-world benchmarks (Node.js 20+):
 
 ## Advanced Usage
 
+<details>
+<summary>Click to expand advanced features</summary>
+
 ### Namespace Separation
 
 ```typescript
@@ -241,7 +306,12 @@ for (const key of keys.filter(k => k.startsWith("user:123"))) {
 }
 ```
 
+</details>
+
 ## Error Handling
+
+<details>
+<summary>Click to expand error handling details</summary>
 
 All operations fail gracefully. Errors are logged but **never thrown**:
 
@@ -253,9 +323,12 @@ const value = await cache.get("key");
 
 This is intentional. Caching failures shouldn't break your app.
 
-## 🔒 Security
+</details>
 
 ## Security
+
+<details>
+<summary>Click to expand security features</summary>
 
 ### Input Validation
 
@@ -303,6 +376,8 @@ if (!limiter.isAllowed("user:123")) {
 
 For comprehensive security best practices, see: [Security Guide](./SECURITY.md)
 
+</details>
+
 ## Monitoring & Metrics
 
 Track cache performance and health in real-time:
@@ -335,6 +410,43 @@ const health = monitor.check();
 
 **See:** [Performance Tuning Guide](./PERFORMANCE.md)
 
+## CLI Tool
+
+Cachkit includes a command-line interface for cache management and debugging:
+
+```bash
+# Show cache status
+cachkit status
+
+# List all cached keys
+cachkit keys
+
+# Get a cached value
+cachkit get user:123
+
+# Store a value (with optional TTL in seconds)
+cachkit set user:123 '{"id":123,"name":"John"}' 3600
+
+# Delete a key
+cachkit delete user:123
+
+# Clear all cache
+cachkit clear
+
+# Display cache statistics
+cachkit stats
+
+# Show help
+cachkit help
+```
+
+The CLI is useful for:
+- Debugging cache during development
+- Inspecting what's currently cached
+- Manual cache invalidation
+- Monitoring cache size and key count
+- Verifying cache operations
+
 ## Testing
 
 ```bash
@@ -352,16 +464,52 @@ Cachkit includes 157 tests covering:
 
 ## Contributing
 
-Contributions are welcome. Before submitting a pull request:
+Contributions are welcome and appreciated! Whether it's bug reports, feature requests, or code contributions, they all help make Cachkit better.
+
+### Before Contributing
+
+1. **Fork** the repository
+2. **Clone** your fork: `git clone https://github.com/YOUR_USERNAME/cachkit.git`
+3. **Install** dependencies: `npm install`
+
+### Development Workflow
 
 ```bash
-npm run build    # Compile TypeScript
-npm test         # Run all tests (157 tests)
-npm run typecheck # Verify type safety
-npm run lint:fix # Fix linting issues
+npm run build       # Compile TypeScript to JavaScript
+npm test            # Run all 157 tests
+npm run typecheck   # Check type safety
+npm run lint        # Run ESLint
+npm run lint:fix    # Auto-fix linting issues
 ```
 
-All tests must pass before PR review. For new features, please include appropriate test coverage.
+### Contribution Guidelines
+
+- **Bug Fixes**: Include a test that reproduces the bug
+- **New Features**: Add tests and update documentation
+- **Documentation**: Grammar and clarity improvements welcome
+- **Tests**: Aim for comprehensive coverage of edge cases
+- **Code Style**: Follow the existing code style (ESLint will help)
+
+### Running Tests
+
+```bash
+npm test                                # Run all tests
+npm test -- --testNamePattern="cache"   # Run specific tests
+npm test -- --coverage                  # Generate coverage report
+```
+
+All tests must pass before PR review. We maintain 157+ passing tests to ensure reliability.
+
+### Pull Request Process
+
+1. Create a feature branch: `git checkout -b feature/my-feature`
+2. Make your changes
+3. Run `npm run lint:fix` to fix any style issues
+4. Ensure all tests pass: `npm test`
+5. Commit with clear messages: `git commit -m "Add feature: description"`
+6. Push to your fork and create a Pull Request
+
+We'll review your PR within a few days. Thanks for contributing!
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com/)
 
@@ -377,7 +525,28 @@ Every Node.js application implements caching differently. Some use `redis.get()`
 
 Cachkit is built with TypeScript, extensively tested (157 tests), and maintains a stable API. Use it in development with in-memory storage or promote to production with Redis—the same code works everywhere.
 
+### Comparison to Other Caching Libraries
+
+| Feature | **Cachkit** | node-cache | redis | ioredis |
+|---------|-----------|-----------|-------|---------|
+| **Zero Config** | ✅ Yes | ✅ Yes | ❌ No | ❌ No |
+| **Auto Memoization** | ✅ wrap() | ❌ Manual | ❌ Manual | ❌ Manual |
+| **Type Safety** | ✅ TypeScript | ❌ No | ⚠️ Partial | ⚠️ Partial |
+| **Encryption Support** | ✅ AES-256 | ❌ No | ❌ No | ❌ No |
+| **Rate Limiting** | ✅ Built-in | ❌ No | ❌ No | ❌ No |
+| **Monitoring/Metrics** | ✅ Built-in | ❌ No | ❌ No | ❌ No |
+| **Multiple Backends** | ✅ Memory/Redis/Memcached | ⚠️ Memory only | ✅ Redis only | ✅ Redis only |
+| **Graceful Errors** | ✅ Never throws | ⚠️ Can crash | ✅ Can crash | ✅ Can crash |
+| **Size (unpacked)** | 🚀 ~50KB | ~35KB | ~43KB | ~80KB |
+| **Production Ready** | ✅ 157 tests | ✅ Stable | ✅ Industry standard | ✅ Industry standard |
+| **Learning Curve** | 🎯 5 minutes | 5 minutes | 15+ minutes | 20+ minutes |
+
+**Choose Cachkit if you want**: All-in-one solution with type safety, encryption, and monitoring  
+**Choose others if you need**: Lightweight memory-only solution or established Redis client library
+
 ## License
+
+[![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 MIT License. See LICENSE file for details.
 

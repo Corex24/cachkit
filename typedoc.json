@@ -1,0 +1,16 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "plugin": ["typedoc-plugin-markdown"],
+  "theme": "markdown",
+  "readme": "README.md",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "excludeExternals": false,
+  "includeVersion": true,
+  "useCodeBlocks": true,
+  "categorizeByGroup": true,
+  "sort": ["source-order"],
+  "hideInPageTOC": false,
+  "hideBreadcrumbs": false
+}

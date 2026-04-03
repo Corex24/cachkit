@@ -1,0 +1,31 @@
+# Development files
+.editorconfig
+.gitattributes
+.gitignore
+.nvmrc
+
+# Documentation
+CHANGELOG.md
+PERFORMANCE.md
+SECURITY.md
+
+# Testing
+test/
+jest.config.js
+
+# Source code
+src/
+tsconfig*.json
+eslint.config.js
+.prettierrc
+
+# Configuration
+.github/
+.vscode/
+
+# Dependencies
+node_modules/
+
+# Misc
+*.md
+!README.md

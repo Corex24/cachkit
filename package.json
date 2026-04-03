@@ -1,8 +1,11 @@
 {
   "name": "cachkit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "High-performance caching and optimization layer for Node.js APIs.",
   "main": "lib/index.js",
+  "bin": {
+    "cachkit": "lib/cli.js"
+  },
   "type": "module",
   "keywords": [
     "cache",
@@ -11,12 +14,23 @@
     "performance",
     "nodejs",
     "api",
-    "middleware"
+    "middleware",
+    "redis",
+    "memcached",
+    "lru",
+    "distributed-cache",
+    "in-memory",
+    "ttl",
+    "redis-cache",
+    "caching-library",
+    "high-performance",
+    "typescript"
   ],
   "author": "Corex Anthony <corexanthony24@gmail.com>",
   "license": "MIT",
   "files": [
-    "lib/"
+    "lib/",
+    "engine-requirement.js"
   ],
   "repository": {
     "type": "git",
@@ -32,6 +46,7 @@
   "engines": {
     "node": ">=20.0.0"
   },
+  "engineStrict": true,
   "scripts": {
     "build": "tsc -P tsconfig.build.json",
     "build:clean": "rimraf lib",
@@ -53,6 +68,7 @@
     "prepare": "npm run build",
     "prepack": "npm run build",
     "prepublishOnly": "npm run build",
+    "preinstall": "node engine-requirement.js",
     "clean": "rimraf lib coverage",
     "docs:serve": "npx http-server docs",
     "deps:update": "npx npm-check-updates -u && npm install",
